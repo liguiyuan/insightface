@@ -18,16 +18,21 @@ args = parser.parse_args()
 model = face_model.FaceModel(args)
 img = cv2.imread('Tom_Hanks_54745.png')
 img = model.get_input(img)
-#f1 = model.get_feature(img)
-#print(f1[0:10])
-gender, age = model.get_ga(img)
-print(gender)
-print(age)
-sys.exit(0)
-img = cv2.imread('/raid5data/dplearn/megaface/facescrubr/112x112/Tom_Hanks/Tom_Hanks_54733.png')
+f1 = model.get_feature(img) 		# 人脸的得到特征点，128个特征点
+print(f1[0:10])
+
+gender, age = model.get_ga(img)		# 导入性别和年龄识别模型
+print('gender: ', gender)
+print('age: ', age)
+# sys.exit(0)
+
+# img = cv2.imread('/raid5data/dplearn/megaface/facescrubr/112x112/Tom_Hanks/Tom_Hanks_54733.png')
+img = cv2.imread('../gender-age/Tom_Hanks_54745.png')
+img = model.get_input(img)
 f2 = model.get_feature(img)
-dist = np.sum(np.square(f1-f2))
-print(dist)
+dist = np.sum(np.square(f1-f2)) 	# 比较两张人脸的欧氏距离
+print('dist: ', dist)
+
 sim = np.dot(f1, f2.T)
 print(sim)
 #diff = np.subtract(source_feature, target_feature)
