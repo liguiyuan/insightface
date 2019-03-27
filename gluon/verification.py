@@ -188,7 +188,7 @@ def load_bin(path, image_size):
   for flip in [0,1]:
     data = nd.empty((len(issame_list)*2, 3, image_size[0], image_size[1]))
     data_list.append(data)
-  for i in xrange(len(issame_list)*2):
+  for i in range(len(issame_list)*2):
     _bin = bins[i]
     img = mx.image.imdecode(_bin)
     img = nd.transpose(img, axes=(2, 0, 1))
@@ -207,7 +207,7 @@ def test(data_set, net, ctx, batch_size, nfolds=10):
   issame_list = data_set[1]
   embeddings_list = []
   time_consumed = 0.0
-  for i in xrange( len(data_list) ):
+  for i in range( len(data_list) ):
     data = data_list[i]
     embeddings = None
     ba = 0
@@ -257,7 +257,7 @@ def test(data_set, net, ctx, batch_size, nfolds=10):
   _xnorm = 0.0
   _xnorm_cnt = 0
   for embed in embeddings_list:
-    for i in xrange(embed.shape[0]):
+    for i in range(embed.shape[0]):
       _em = embed[i]
       _norm=np.linalg.norm(_em)
       #print(_em.shape, _norm)
@@ -350,7 +350,7 @@ if __name__ == '__main__':
       ver_name_list.append(name)
 
   if args.mode==0:
-    for i in xrange(len(ver_list)):
+    for i in range(len(ver_list)):
       results = []
       for model in nets:
         acc1, std1, acc2, std2, xnorm, embeddings_list = test(ver_list[i], model, args.batch_size, args.nfolds)

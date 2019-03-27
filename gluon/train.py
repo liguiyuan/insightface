@@ -109,7 +109,7 @@ class MAEMetric(mx.metric.EvalMetric):
     pred_age = np.zeros( label_age.shape, dtype=np.int)
     #pred_age = np.zeros( label_age.shape, dtype=np.float32)
     pred = preds[0].asnumpy()
-    for i in xrange(AGE):
+    for i in range(AGE):
       _pred = pred[:,i*2:(i*2+2)]
       _pred = np.argmax(_pred, axis=1)
       #pred = pred[:,1]
@@ -135,7 +135,7 @@ class CUMMetric(mx.metric.EvalMetric):
     label_age = np.count_nonzero(label, axis=1)
     pred_age = np.zeros( label_age.shape, dtype=np.int)
     pred = preds[0].asnumpy()
-    for i in xrange(AGE):
+    for i in range(AGE):
       _pred = pred[:,i*2:(i*2+2)]
       _pred = np.argmax(_pred, axis=1)
       #pred = pred[:,1]
@@ -342,7 +342,7 @@ def train_net(args):
     ctx = []
     cvd = os.environ['CUDA_VISIBLE_DEVICES'].strip()
     if len(cvd)>0:
-      for i in xrange(len(cvd.split(','))):
+      for i in range(len(cvd.split(','))):
         ctx.append(mx.gpu(i))
     if len(ctx)==0:
       ctx = [mx.cpu()]
@@ -449,7 +449,7 @@ def train_net(args):
 
     def ver_test(nbatch):
       results = []
-      for i in xrange(len(ver_list)):
+      for i in range(len(ver_list)):
         acc1, std1, acc2, std2, xnorm, embeddings_list = verification.test(ver_list[i], net, ctx, batch_size = args.batch_size)
         print('[%s][%d]XNorm: %f' % (ver_name_list[i], nbatch, xnorm))
         #print('[%s][%d]Accuracy: %1.5f+-%1.5f' % (ver_name_list[i], nbatch, acc1, std1))
@@ -528,7 +528,7 @@ def train_net(args):
     if len(args.lr_steps)==0:
       lr_steps = [100000, 140000, 160000]
       p = 512.0/args.batch_size
-      for l in xrange(len(lr_steps)):
+      for l in range(len(lr_steps)):
         lr_steps[l] = int(lr_steps[l]*p)
     else:
       lr_steps = [int(x) for x in args.lr_steps.split(',')]
@@ -681,7 +681,7 @@ def train_net(args):
                         Ls.append(L)
                         outputs.append(z[1])
                       elif args.task=='age':
-                        for k in xrange(AGE):
+                        for k in range(AGE):
                           _z = nd.slice_axis(z[2], axis=1, begin=k*2, end=k*2+2)
                           _y = nd.slice_axis(y, axis=1, begin=k, end=k+1)
                           _y = nd.flatten(_y)

@@ -29,7 +29,7 @@ def main(args):
   if not os.path.exists(args.output):
     os.makedirs(args.output)
   writer = mx.recordio.MXIndexedRecordIO(os.path.join(args.output, 'train.idx'), os.path.join(args.output, 'train.rec'), 'w')
-  for ds_id in xrange(len(rec_list)):
+  for ds_id in range(len(rec_list)):
     id_list = []
     imgrec = rec_list[ds_id]
     s = imgrec.read_idx(0)
@@ -49,7 +49,7 @@ def main(args):
       writer.write_idx(identity, s)
       header, _ = mx.recordio.unpack(s)
       nlabel+=1
-      for _idx in xrange(int(header.label[0]), int(header.label[1])):
+      for _idx in range(int(header.label[0]), int(header.label[1])):
         s = imgrec.read_idx(_idx)
         _header, _content = mx.recordio.unpack(s)
         nheader = mx.recordio.IRHeader(0, nlabel, _idx, 0)
