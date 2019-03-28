@@ -203,6 +203,24 @@ $ python test.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../
 
 
 
+人脸检测：
+
+```bash
+python find_faces_in_picture.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../gender-age/model/model,0
+```
+
+![](/home/liguiyuan/deep_learning/project/insightface/deploy/face_detector.jpeg)
+
+
+
+人脸识别：
+
+```bash
+python facerec_from_webcam.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../gender-age/model/model,0
+```
+
+
+
 报错三：
 
 > Original exception was:

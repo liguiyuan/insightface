@@ -83,6 +83,23 @@ class FaceModel:
     aligned = np.transpose(nimg, (2,0,1))
     return aligned
 
+  def get_bbox_and_landmarks(self, face_img):
+    ret = self.detector.detect_face(face_img, det_type = self.args.det)
+    if ret is None:
+      print('there is detector no face')
+      return None, None, None
+    bbox, points = ret
+    if bbox.shape[0]==0:
+      return None, None, None
+    
+    bbox2 = bbox[0,0:4]
+    points2 = points[0,:].reshape((2,5)).T
+    nimg = face_preprocess.preprocess(face_img, bbox2, points2, image_size='112,112')
+    nimg = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
+    aligned = np.transpose(nimg, (2,0,1))
+
+    return bbox, points, aligned
+
   def get_feature(self, aligned):
     input_blob = np.expand_dims(aligned, axis=0)
     data = mx.nd.array(input_blob)
