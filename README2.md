@@ -209,7 +209,7 @@ $ python test.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../
 python find_faces_in_picture.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../gender-age/model/model,0
 ```
 
-![](/home/liguiyuan/deep_learning/project/insightface/deploy/face_detector.jpeg)
+![https://github.com/liguiyuan/insightface/blob/master/deploy/face_detector.jpeg]()
 
 
 
