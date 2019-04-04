@@ -8,15 +8,15 @@ insightface
 
 官方github地址：[https://github.com/deepinsight/insightface](https://github.com/deepinsight/insightface)
 
-1. 安装MXNetGPU 版本
+## 1. 安装MXNetGPU 版本
 
-   ```shell
-   $ sudo pip install mxnet-cu90
-   ```
+```shell
+$ sudo pip install mxnet-cu90
+```
 
-   
 
-2. 克隆insightface工程到本地
+
+## 2. 克隆insightface工程到本地
 
 ```shell
 git clone --recursive https://github.com/deepinsight/insightface.git
@@ -24,49 +24,54 @@ git clone --recursive https://github.com/deepinsight/insightface.git
 
 
 
-3. 下载训练数据集（MS1M-Arcface），下载地址为：https://github.com/deepinsight/insightface/wiki/Dataset-Zoo，然后把数据集解压到 insightface/datasets 目录下：
+## 3. 下载训练数据集（MS1M-Arcface）
 
-   ```
-   datasets/
-   ├── faces_emore
-   │   ├── agedb_30.bin
-   │   ├── calfw.bin
-   │   ├── cfp_ff.bin
-   │   ├── cfp_fp.bin
-   │   ├── cplfw.bin
-   │   ├── lfw.bin
-   │   ├── property
-   │   ├── train.idx
-   │   ├── train.rec
-   │   └── vgg2_fp.bin
-   └── README.md
-   ```
+下载地址为：https://github.com/deepinsight/insightface/wiki/Dataset-Zoo，然后把数据集解压到 insightface/datasets 目录下：
 
-   其中train.idx，train.rec，property用于训练，lfw.bin，cfp_fp.bin，agedb_30.bin用于验证。
+```
+datasets/
+├── faces_emore
+│   ├── agedb_30.bin
+│   ├── calfw.bin
+│   ├── cfp_ff.bin
+│   ├── cfp_fp.bin
+│   ├── cplfw.bin
+│   ├── lfw.bin
+│   ├── property
+│   ├── train.idx
+│   ├── train.rec
+│   └── vgg2_fp.bin
+└── README.md
+```
+
+其中train.idx，train.rec，property用于训练，lfw.bin，cfp_fp.bin，agedb_30.bin用于验证。其中`train.idx` 和 `train.rec`分别是数据偏移索引和数据本身的文件，`property`代表数据集属性。
 
 
 
-4. 进入 insightface/recognition 目录下，设置一下这两个参数
+## 4. 训练
 
-   ```shell
-   export MXNET_CPU_WORKER_NTHREADS=24
-   export MXNET_ENGINE_TYPE=ThreadedEnginePerDevice
-   ```
+### 4.1 训练准备
 
-   拷贝一个配置选项文件并修改里面的配置参数：
+- 进入 insightface/recognition 目录下，设置一下这两个参数，使用24线程加速，设置为在每个设备上跑。
 
-   ```shell
-   cp sample_config.py config.py
-   vim config.py # edit dataset path etc..
-   ```
+```shell
+export MXNET_CPU_WORKER_NTHREADS=24
+export MXNET_ENGINE_TYPE=ThreadedEnginePerDevice
+```
+
+- 拷贝一个配置选项文件并修改里面的配置参数：
+
+
+```shell
+cp sample_config.py config.py
+vim config.py # edit dataset path etc..
+```
 
 把 config.py 里面的 default.per_batch_size = 128 改为：default.per_batch_size = 16 ，要不然GPU会内存不足报错。
 
 
 
-
-
-5. 执行训练：
+### 4.2 开始训练
 
 官方提供了一下指令：
 
@@ -108,7 +113,11 @@ CUDA_VISIBLE_DEVICES='0' python -u train.py --network m1 --loss arcface --datase
 
 会在 insightface/recognition/models 目录下生成训练好的模型。
 
-报错一：
+
+
+- 报错修改
+
+**报错一：**
 
 > for i in xrange():
 >
@@ -118,7 +127,7 @@ CUDA_VISIBLE_DEVICES='0' python -u train.py --network m1 --loss arcface --datase
 
 
 
-报错二：
+**报错二：**
 
 出现以下错误，和这篇博客所说的问题一样。https://blog.csdn.net/weixin_39502247/article/details/79933896
 
@@ -159,11 +168,13 @@ bins, issame_list = pickle.load(open(path, 'rb'), encoding='bytes')
 
 
 
-6. 验证模型
+## 5. 验证模型
 
-(1)下载预训练模型，可以参考官方提供的地址进行下载，把模型放到 insightface/models/ 目录下，并解压。
+- 下载预训练模型，可以参考官方提供的地址进行下载，把模型放到 insightface/models/ 目录下，并解压。
 
-(2)修改 insightface/src/eval/verification.py ，找到185行并修改
+
+- 修改 insightface/src/eval/verification.py ，找到185行并修改
+
 
 ```python
 bins, issame_list = pickle.load(open(path, 'rb'))
@@ -171,10 +182,11 @@ bins, issame_list = pickle.load(open(path, 'rb'))
 bins, issame_list = pickle.load(open(path, 'rb'), encoding='bytes')
 ```
 
-(3)进行验证
+- 进行验证
+
 
 ```shell
-$ python src/eval/verification.py --gpu 0 --data-dir datasets/faces_emore/ --model models/model-y1-test2/model,0 --target lfw
+$ python src/eval/verification.py --gpu 0 --data-dir datasets/faces_emore/ --model models/model-y1-test2/model,0 --target lfw,agedb_30
 ```
 
 --model 用来指明model的路径
@@ -188,9 +200,14 @@ $ python src/eval/verification.py --gpu 0 --data-dir datasets/faces_emore/ --mod
 > [lfw]Accuracy-Flip: 0.99450+-0.00466
 > Max of [lfw] is 0.99450
 
+> [agedb_30]XNorm: 11.046304
+> [agedb_30]Accuracy: 0.00000+-0.00000
+> [agedb_30]Accuracy-Flip: 0.95717+-0.01188
+> Max of [agedb_30] is 0.95717
 
 
-7. 部署模型
+
+## 6. 部署模型
 
 ```bash
 $ cd deploy
@@ -203,7 +220,8 @@ $ python test.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../
 
 
 
-人脸检测：
+- 人脸检测
+
 
 ```bash
 python find_faces_in_picture.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../gender-age/model/model,0
@@ -213,15 +231,20 @@ python find_faces_in_picture.py --gpu 0 --model ../models/model-y1-test2/model,0
 
 
 
-人脸识别：
+- 人脸识别
+
 
 ```bash
 python facerec_from_webcam.py --gpu 0 --model ../models/model-y1-test2/model,0 --ga-model ../gender-age/model/model,0
 ```
 
+------
 
 
-报错三：
+
+**常见的报错**
+
+**报错三：**
 
 > Original exception was:
 > Traceback (most recent call last):
@@ -237,7 +260,7 @@ python facerec_from_webcam.py --gpu 0 --model ../models/model-y1-test2/model,0 -
 
 
 
-报错四：
+**报错四：**
 
 > Original exception was:
 > Traceback (most recent call last):
