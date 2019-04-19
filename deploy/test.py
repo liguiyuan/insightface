@@ -26,11 +26,11 @@ print('gender: ', gender)
 print('age: ', age)
 # sys.exit(0)
 
-# img = cv2.imread('/raid5data/dplearn/megaface/facescrubr/112x112/Tom_Hanks/Tom_Hanks_54733.png')
 img = cv2.imread('../gender-age/Tom_Hanks_54745.png')
 img = model.get_input(img)
 f2 = model.get_feature(img)
-dist = np.sum(np.square(f1-f2)) 	# 比较两张人脸的欧氏距离
+
+dist = np.sqrt(np.sum(np.square(np.subtract(f1, f2))))	# 比较两张人脸的欧氏距离
 print('dist: ', dist)
 
 sim = np.dot(f1, f2.T)
