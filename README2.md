@@ -67,7 +67,7 @@ cp sample_config.py config.py
 vim config.py # edit dataset path etc..
 ```
 
-把 config.py 里面的 default.per_batch_size = 128 改为：default.per_batch_size = 16 ，要不然GPU会内存不足报错。
+把 config.py 里面的 default.per_batch_size = 128 改为：default.per_batch_size = 64 ，要不然GPU会内存不足报错。
 
 
 
