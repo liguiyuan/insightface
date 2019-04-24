@@ -102,13 +102,17 @@ CUDA_VISIBLE_DEVICES='0,1,2,3' python -u train.py --network m1 --loss triplet --
 
 
 根据自己的硬件，我自己的训练命令为：
-
+training:
 ```bash
 CUDA_VISIBLE_DEVICES='0' python -u train.py --network r100 --loss arcface --dataset emore
 ```
 
 ```bash
 CUDA_VISIBLE_DEVICES='0' python -u train.py --network m1 --loss arcface --dataset emore
+```
+fine-tune:
+```bash
+CUDA_VISIBLE_DEVICES='0' python -u train.py --network m1 --loss softmax --lr 0.1 --pretrained ./models/m1-softmax-emore/model
 ```
 
 会在 insightface/recognition/models 目录下生成训练好的模型。
